@@ -1,0 +1,58 @@
+stages:
+  - lint
+
+variables:
+  CLANG_TIDY_VERSION: "18"
+  BUILD_DIR: "clang-tidy-build"
+
+clang-tidy-check:
+  stage: lint
+  image: ubuntu:22.04
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+  before_script:
+    - apt-get update
+    - apt-get install -y --no-install-recommends 
+        wget 
+        gnupg 
+        software-properties-common 
+        make 
+        cmake 
+        ninja-build 
+        python3 
+        python3-pip 
+        git
+
+    - wget -qO- https://apt.llvm.org/llvm.sh | bash -s -- ${CLANG_TIDY_VERSION}
+    - apt-get install -y 
+        clang-${CLANG_TIDY_VERSION} 
+        clang-tidy-${CLANG_TIDY_VERSION} 
+        lld-${CLANG_TIDY_VERSION}
+    - update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-${CLANG_TIDY_VERSION} 100
+    - update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${CLANG_TIDY_VERSION} 100
+  script:
+    - mkdir -p ${BUILD_DIR}
+    - cd ${BUILD_DIR}
+
+    - cp ../.clang-tidy .
+
+    - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja ..
+
+    - run-clang-tidy-${CLANG_TIDY_VERSION} -j $(nproc) -p . 
+        -config-file=".clang-tidy" 
+        > clang-tidy-report.txt
+    
+    - pip3 install git+https://gitlab.com/autowp/converters.git
+    - clang_tidy_output_to_gitlab_codeclimate clang-tidy-report.txt > gl-code-quality-report.json
+  after_script:
+    - if [ -s clang-tidy-report.txt ]; then echo "Linter problems found!"; exit 1; fi
+  artifacts:
+    paths:
+      - ${BUILD_DIR}/compile_commands.json
+      - ${BUILD_DIR}/clang-tidy-report.txt
+      - ${BUILD_DIR}/gl-code-quality-report.json
+    reports:
+      codequality: ${BUILD_DIR}/gl-code-quality-report.json
+    expire_in: 1 week
+    when: always
+    
