@@ -13,6 +13,34 @@ set(CMAKE_CXX_CLANG_TIDY
     --header-filter=.*
 )
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) 
+
+
+set(CFlag 
+-O2
+-Werror
+-pedantic-errors
+
+-Wall
+-Wextra
+-Wpedantic
+
+-Wcast-align
+-Wcast-qual
+-Wconversion
+-Wctor-dtor-privacy
+-Wduplicated-branches
+-Wduplicated-cond
+-Wextra-semi
+-Wfloat-equal
+-Wlogical-op
+-Wnon-virtual-dtor
+-Wold-style-cast
+-Woverloaded-virtual
+-Wredundant-decls
+-Wsign-conversion
+-Wsign-promo)
+
 file(GLOB_RECURSE SOURCES
     "src/*.cpp"
     "src/scenes/*.cpp"
