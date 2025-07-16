@@ -48,6 +48,8 @@ file(GLOB_RECURSE HEADERS
     "src/objects/*.cpp"
 )
 
+find_package(SFML 2.6.1 COMPONENTS graphics window system REQUIRED)
+
 add_executable(${PROJECT_NAME}
     ${SOURCES}
     ${HEADERS}
@@ -58,9 +60,3 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 
 target_compile_options(${PROJECT_NAME}  PRIVATE ${CFlag})
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    ${SFML_GRAPHICS_LIBRARY}
-    ${SFML_WINDOW_LIBRARY}
-    ${SFML_SYSTEM_LIBRARY}
-)
