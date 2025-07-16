@@ -1,5 +1,4 @@
 build
-.clang-tidy
 
 /obj
 /VsCode
