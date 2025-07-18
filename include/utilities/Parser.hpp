@@ -1,5 +1,5 @@
 #pragma once
 
-class ParserQuery {};
+class ParserCommand {};
 
 class Parser {};

@@ -2,13 +2,7 @@ name: Clang-Tidy Analysis
 
 on:
   pull_request:
-    branches:
-      - main
-      - master
   pull_request_target:
-    branches:
-      - main
-      - master
 
 permissions:
   contents: read
