@@ -37,7 +37,7 @@ jobs:
           key: ${{ runner.os }}-cmake-${{ hashFiles('**/CMakeLists.txt') }}
           restore-keys: |
             ${{ runner.os }}-cmake-
-              
+
       - name: Cache LLVM downloads
         uses: actions/cache@v3
         with:
@@ -53,9 +53,7 @@ jobs:
             ${{ runner.os }}-venv-
 
       - name: Update system packages
-        run: |
-          sudo apt-get update
-          sudo apt-get upgrade -y
+        run: sudo apt-get update -qq
 
       - name: Install build tools and ccache
         run: |
@@ -92,6 +90,8 @@ jobs:
           sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-18 100
 
       - name: Verify installations
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: |
           clang-tidy --version 
           qmake6 --version
