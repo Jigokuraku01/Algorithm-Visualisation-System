@@ -51,6 +51,7 @@ foreach(FILE ${INCLUDE_DIRS_AND_FILES})
 endforeach()
 
 find_package(SFML 2.6.1 COMPONENTS graphics window system REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 add_executable(${PROJECT_NAME}
     ${SRC_FILES}
@@ -65,4 +66,8 @@ target_compile_options(${PROJECT_NAME}  PRIVATE ${Flags})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     sfml-graphics sfml-window sfml-system
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE 
+    Qt6::Core Qt6::Gui Qt6::Widgets
 )

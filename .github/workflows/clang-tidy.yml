@@ -37,6 +37,12 @@ jobs:
           key: ${{ runner.os }}-cmake-${{ hashFiles('**/CMakeLists.txt') }}
           restore-keys: |
             ${{ runner.os }}-cmake-
+              
+      - name: Cache LLVM downloads
+        uses: actions/cache@v3
+        with:
+          path: /tmp/llvm-cache
+          key: ${{ runner.os }}-llvm-18
 
       - name: Cache Python venv
         uses: actions/cache@v3
@@ -74,6 +80,10 @@ jobs:
         run: |
           sudo apt-get install -y --no-install-recommends libsfml-dev libgl1-mesa-dev libopenal-dev libvorbis-dev
 
+      - name: Install Qt6
+        run: |
+          sudo apt-get install -y --no-install-recommends qt6-base-dev qt6-tools-dev qt6-l10n-tools qtcreator
+
       - name: Install LLVM & clang-tidy
         run: |
           curl -sSL https://apt.llvm.org/llvm.sh | sudo bash -s -- 18
@@ -82,7 +92,11 @@ jobs:
           sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-18 100
 
       - name: Verify installations
-        run: clang-tidy --version
+        run: |
+          clang-tidy --version 
+          qmake6 --version
+          qtcreator --version
+          cmake --version
 
       - name: Setup build directory
         run: |
