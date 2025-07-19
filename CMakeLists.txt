@@ -28,35 +28,41 @@ set(Flags
     -Wconversion
 )
 
-file(GLOB_RECURSE SOURCES
-    "src/*.cpp"
-    "src/scenes/*.cpp"
-    "src/scenes/algo_handler/*.cpp"
-    "src/scenes/algo_handler/algorithms/*.cpp"
-    "src/scenes/menu/*.cpp"
-    "src/utilities/*.cpp"
-    "src/objects/*.cpp"
-)
+file(GLOB_RECURSE FILES_IN_SRC "src/*")
 
-file(GLOB_RECURSE HEADERS
-    "include/*.hpp"
-    "include/scenes/*.hpp"
-    "include/scenes/algo_handler/*.hpp"
-    "src/scenes/algo_handler/algorithms/*.hpp"
-    "include/scenes/menu/*.hpp"
-    "include/utilities/*.hpp"
-    "src/objects/*.cpp"
-)
+set(SRC_FILES "")
+
+foreach(FILE ${FILES_IN_SRC})
+    if(FILE MATCHES "\\.cpp$" OR FILE MATCHES "\\.c$")
+        list(APPEND SRC_FILES ${FILE})
+        message(STATUS "Source file: ${FILE}")
+    endif()
+endforeach()
+
+file(GLOB_RECURSE INCLUDE_DIRS_AND_FILES LIST_DIRECTORIES true "include/*")
+
+set(INCLUDE_DIRS "")
+
+foreach(FILE ${INCLUDE_DIRS_AND_FILES})
+    if (IS_DIRECTORY ${FILE})
+        list(APPEND INCLUDE_DIRS ${FILE})
+        message(STATUS "Include directory: ${FILE}")
+    endif()    
+endforeach()
 
 find_package(SFML 2.6.1 COMPONENTS graphics window system REQUIRED)
 
 add_executable(${PROJECT_NAME}
-    ${SOURCES}
-    ${HEADERS}
+    ${SRC_FILES}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/include
+    ${INCLUDE_DIRS}
 )
 
-target_compile_options(${PROJECT_NAME}  PRIVATE ${CFlag})
+target_compile_options(${PROJECT_NAME}  PRIVATE ${Flags})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    sfml-graphics sfml-window sfml-system
+)
