@@ -69,21 +69,51 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_compile_options(${PROJECT_NAME} PRIVATE ${Flags})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE 
+target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Quick
 )
 
-find_program(CLANG_TIDY NAMES clang-tidy)
+find_program(CLANG_TIDY NAMES clang-tidy-18)
 
 set(LINT_FILES ${INCLUDE_HEADERS} ${SRC_FILES})
 
-add_custom_target(lint
-    COMMAND ${CLANG_TIDY} ${LINT_FILES}
-            --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy
-            --header-filter=.*
-            -p ${CMAKE_BINARY_DIR}
-    COMMENT "Running clang-tidy."
-)
+if(CLANG_TIDY)
+    execute_process(
+        COMMAND ${CLANG_TIDY} --help
+        OUTPUT_VARIABLE TIDY_HELP_OUTPUT
+    )
+    
+    set(SUPPORTS_JOBS FALSE)
+    if(TIDY_HELP_OUTPUT MATCHES "\\-j\\ <N>")
+        set(SUPPORTS_JOBS TRUE)
+    elseif(TIDY_HELP_OUTPUT MATCHES "\\-j")
+        set(SUPPORTS_JOBS TRUE)
+    endif()
+
+    if (${SUPPORTS_JOBS})
+        message(STATUS "Your version of clang-tidy supports the -j option.")
+    else()
+        message(WARNING "Your version of clang-tidy does not support the -j option.")    
+    endif()
+
+    set(TIDY_COMMAND ${CLANG_TIDY}
+        ${LINT_FILES}
+        --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy
+        --header-filter=.*
+        -p ${CMAKE_BINARY_DIR}
+    )
+
+    if(SUPPORTS_JOBS)
+        list(APPEND TIDY_COMMAND "-j 0")
+    endif()
+
+    add_custom_target(lint
+        COMMAND ${TIDY_COMMAND}
+        COMMENT "Running clang-tidy."
+    )
+else()
+    message(WARNING "clang-tidy not found, lint target off.")
+endif()
 
 add_custom_target(build
     DEPENDS ${PROJECT_NAME}
@@ -94,3 +124,10 @@ add_custom_target(clear
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean
     COMMENT "Cleaning up generated files."
 )
+
+add_custom_target(build_and_run
+    DEPENDS ${PROJECT_NAME}
+    COMMAND $<TARGET_FILE:${PROJECT_NAME}>
+    COMMENT "Building and running ${PROJECT_NAME}"
+)
+с
