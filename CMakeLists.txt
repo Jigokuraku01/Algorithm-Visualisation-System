@@ -43,18 +43,23 @@ file(GLOB_RECURSE INCLUDE_DIRS_AND_FILES LIST_DIRECTORIES true "include/*")
 
 set(INCLUDE_DIRS "")
 
+set(INCLUDE_HEADERS "")
+
 foreach(FILE ${INCLUDE_DIRS_AND_FILES})
     if (IS_DIRECTORY ${FILE})
         list(APPEND INCLUDE_DIRS ${FILE})
         message(STATUS "Include directory: ${FILE}")
+    else()
+        if(FILE MATCHES "\\.hpp$" OR FILE MATCHES "\\.h$")
+            list(APPEND INCLUDE_HEADERS ${FILE})
+        endif()
     endif()    
 endforeach()
 
-find_package(SFML 2.6.1 COMPONENTS graphics window system REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 add_executable(${PROJECT_NAME}
-    ${SRC_FILES}
+               ${SRC_FILES}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -62,12 +67,30 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${INCLUDE_DIRS}
 )
 
-target_compile_options(${PROJECT_NAME}  PRIVATE ${Flags})
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    sfml-graphics sfml-window sfml-system
-)
+target_compile_options(${PROJECT_NAME} PRIVATE ${Flags})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
     Qt6::Core Qt6::Gui Qt6::Widgets
+)
+
+find_program(CLANG_TIDY NAMES clang-tidy)
+
+set(LINT_FILES ${INCLUDE_HEADERS} ${SRC_FILES})
+
+add_custom_target(lint
+    COMMAND ${CLANG_TIDY} ${LINT_FILES}
+            --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy
+            --header-filter=.*
+            -p ${CMAKE_BINARY_DIR}
+    COMMENT "Running clang-tidy."
+)
+
+add_custom_target(build
+    DEPENDS ${PROJECT_NAME}
+    COMMENT "Building project."
+)
+
+add_custom_target(clear
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean
+    COMMENT "Cleaning up generated files."
 )
