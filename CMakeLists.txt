@@ -130,4 +130,3 @@ add_custom_target(build_and_run
     COMMAND $<TARGET_FILE:${PROJECT_NAME}>
     COMMENT "Building and running ${PROJECT_NAME}"
 )
-с
