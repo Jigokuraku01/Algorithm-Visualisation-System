@@ -56,7 +56,7 @@ foreach(FILE ${INCLUDE_DIRS_AND_FILES})
     endif()    
 endforeach()
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Quick)
 
 add_executable(${PROJECT_NAME}
                ${SRC_FILES}
@@ -70,7 +70,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_compile_options(${PROJECT_NAME} PRIVATE ${Flags})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
-    Qt6::Core Qt6::Gui Qt6::Widgets
+    Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Quick
 )
 
 find_program(CLANG_TIDY NAMES clang-tidy)

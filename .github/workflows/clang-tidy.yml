@@ -81,13 +81,14 @@ jobs:
           echo "VIRTUAL_ENV=/tmp/ci-venv" >> $GITHUB_ENV
           echo "/tmp/ci-venv/bin" >> $GITHUB_PATH
 
-      - name: Install SFML
+      - name: Install Qt5
         run: |
-          sudo apt-get install -y --no-install-recommends libsfml-dev libgl1-mesa-dev libopenal-dev libvorbis-dev
-
-      - name: Install Qt6
-        run: |
-          sudo apt-get install -y --no-install-recommends qt6-base-dev qt6-tools-dev qt6-l10n-tools qtcreator
+          sudo apt-get install -y --no-install-recommends \
+          qtbase5-dev \
+          qtchooser \
+          qttools5-dev-tools \
+          qtdeclarative5-dev \
+          qtquickcontrols2-5-dev \
 
       - name: Install LLVM & clang-tidy
         run: |
@@ -101,7 +102,7 @@ jobs:
           QT_QPA_PLATFORM: offscreen
         run: |
           clang-tidy --version 
-          qmake6 --version
+          qmake --version
           qtcreator --version
           cmake --version
 
