@@ -89,6 +89,7 @@ jobs:
           qttools5-dev-tools \
           qtdeclarative5-dev \
           qtquickcontrols2-5-dev \
+          qtcreator
 
       - name: Install LLVM & clang-tidy
         run: |
