@@ -1,6 +1,6 @@
 # Algorithms Visualization
 
-*Interactive step-by-step visualizer of classic sorting algorithms in C++20 using Qt.*
+_Interactive step-by-step visualizer of classic sorting algorithms in C++20 using Qt._
 
 ## Table of Contents
 
@@ -44,11 +44,11 @@
 3. **In-window Controls**
    In the bottom panel, there are buttons:
 
-|            QStyle Icon           |         Action        | Key (Alternative) |
+|           QStyle Icon            |        Action         | Key (Alternative) |
 | :------------------------------: | :-------------------: | :---------------: |
-| `SP_MediaPlay` / `SP_MediaPause` |      Play / Pause     |       Space       |
-|     `SP_TitleBarCloseButton`     |    Exit application   |        Esc        |
-|              `speed`             | Adjust playback speed |    Mouse wheel    |
+| `SP_MediaPlay` / `SP_MediaPause` |     Play / Pause      |       Space       |
+|     `SP_TitleBarCloseButton`     |   Exit application    |        Esc        |
+|             `speed`              | Adjust playback speed |    Mouse wheel    |
 
 > All keyboard keys mirror the corresponding buttons.
 
@@ -71,7 +71,7 @@
 ```bash
 # 1. Clone the repository and navigate into it
 git clone https://github.com/your-username/Algorithm-Visualisation-System.git
-cd Algorithm-Visualisation-System
+cd Algorithm-Visualization-System
 
 # 2. Create and enter the build directory
 mkdir build
