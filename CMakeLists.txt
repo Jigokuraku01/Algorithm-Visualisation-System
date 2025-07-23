@@ -6,13 +6,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_COMPILER "/usr/bin/clang++-18")
 
-set(CMAKE_CXX_CLANG_TIDY 
+set(CMAKE_CXX_CLANG_TIDY
     clang-tidy;
     --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy;
     --header-filter=.*
 )
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON) 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(Flags
     -O2
@@ -46,20 +46,20 @@ set(INCLUDE_DIRS "")
 set(INCLUDE_HEADERS "")
 
 foreach(FILE ${INCLUDE_DIRS_AND_FILES})
-    if (IS_DIRECTORY ${FILE})
+    if(IS_DIRECTORY ${FILE})
         list(APPEND INCLUDE_DIRS ${FILE})
         message(STATUS "Include directory: ${FILE}")
     else()
         if(FILE MATCHES "\\.hpp$" OR FILE MATCHES "\\.h$")
             list(APPEND INCLUDE_HEADERS ${FILE})
         endif()
-    endif()    
+    endif()
 endforeach()
 
 find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Quick)
 
 add_executable(${PROJECT_NAME}
-               ${SRC_FILES}
+    ${SRC_FILES}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -82,18 +82,19 @@ if(CLANG_TIDY)
         COMMAND ${CLANG_TIDY} --help
         OUTPUT_VARIABLE TIDY_HELP_OUTPUT
     )
-    
+
     set(SUPPORTS_JOBS FALSE)
+
     if(TIDY_HELP_OUTPUT MATCHES "\\-j\\ <N>")
         set(SUPPORTS_JOBS TRUE)
     elseif(TIDY_HELP_OUTPUT MATCHES "\\-j")
         set(SUPPORTS_JOBS TRUE)
     endif()
 
-    if (${SUPPORTS_JOBS})
+    if(${SUPPORTS_JOBS})
         message(STATUS "Your version of clang-tidy supports the -j option.")
     else()
-        message(WARNING "Your version of clang-tidy does not support the -j option.")    
+        message(WARNING "Your version of clang-tidy does not support the -j option.")
     endif()
 
     set(TIDY_COMMAND ${CLANG_TIDY}

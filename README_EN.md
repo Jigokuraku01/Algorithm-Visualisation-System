@@ -4,13 +4,15 @@ _Interactive step-by-step visualizer of classic sorting algorithms in C++20 usin
 
 ## Table of Contents
 
-1. [About](#about)
-2. [Key Features](#key-features)
-3. [User Workflow](#user-workflow)
-4. [Technology Stack](#technology-stack)
-5. [Building and Running](#building-and-running)
-6. [Supported Platforms](#supported-platforms)
-7. [Authors](#authors)
+- [Algorithms Visualization](#algorithms-visualization)
+  - [Table of Contents](#table-of-contents)
+  - [About](#about)
+  - [Key Features](#key-features)
+  - [User Workflow](#user-workflow)
+  - [Technology Stack](#technology-stack)
+  - [Building and Running](#building-and-running)
+  - [Supported Platforms](#supported-platforms)
+  - [Authors](#authors)
 
 ---
 

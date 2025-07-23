@@ -9,12 +9,11 @@ Checks: >
   portability-*,
   -modernize-use-trailing-return-type,          
   -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
-  -cppcoreguidelines-owning-memory   
+  -cppcoreguidelines-owning-memory
 
-
-WarningsAsErrors: '*'                     
-HeaderFilterRegex: '.*'                   
-FormatStyle: file                         
+WarningsAsErrors: "*"
+HeaderFilterRegex: ".*"
+FormatStyle: file
 
 CheckOptions:
   - key: readability-identifier-naming.ClassCase
@@ -30,17 +29,15 @@ CheckOptions:
   - key: readability-identifier-naming.TemplateParameterCase
     value: CamelCase
 
-  
   - key: readability-braces-around-statements.ShortStatementLines
-    value: 1      
+    value: 1
   - key: llvm-line-length.Max
-    value: 80    
-
+    value: 80
 
   - key: google-readability-casting.AllowedTypeCasts
     value: "static_cast, dynamic_cast"
   - key: google-readability-casting.PreferImplicitCasts
-    value: false  
+    value: false
 
   - key: modernize-use-noexcept.AddOverride
     value: true
