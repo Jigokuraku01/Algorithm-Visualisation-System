@@ -1,10 +1,11 @@
 #pragma once
-
 #include "PossibleAlgos.hpp"
+#include <Parser.hpp>
 #include <iterator>
 #include <string>
 #include <vector>
-class ParserCommand
+
+class DataBundle
 {
     public:
         std::size_t get_window_h();
@@ -15,14 +16,5 @@ class ParserCommand
         bool is_auto();
 
     private:
-        std::size_t window_h_;
-        std::size_t window_w_;
-        PossibleAlgorithms algo_;
-        std::string file_path_;
-        bool is_file_path_exists_;
-        bool is_auto_;
-};
-
-class Parser
-{
+        ParserCommand parser_command_;
 };
