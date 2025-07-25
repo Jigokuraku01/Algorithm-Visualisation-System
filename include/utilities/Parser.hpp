@@ -7,12 +7,12 @@
 class ParserCommand
 {
     public:
-        std::size_t get_window_h();
-        std::size_t get_window_w();
-        PossibleAlgorithms get_algo();
-        std::string get_file_path();
-        bool is_file_path_exists();
-        bool is_auto();
+        [[nodiscard]] std::size_t get_window_h() const;
+        [[nodiscard]] std::size_t get_window_w() const;
+        [[nodiscard]] PossibleAlgorithms get_algo() const;
+        [[nodiscard]] std::string get_file_path() const;
+        [[nodiscard]] bool is_file_path_exists() const;
+        [[nodiscard]] bool is_auto() const;
 
     private:
         std::size_t window_h_;
