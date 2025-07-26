@@ -17,23 +17,24 @@ AllowShortLoopsOnASingleLine: false
 
 BreakBeforeBraces: Custom
 BraceWrapping:
-    AfterClass:       true
-    AfterControlStatement: true
-    AfterEnum:        true
-    AfterFunction:    true
-    AfterNamespace:   true
+    AfterClass:       false
+    AfterControlStatement: false
+    AfterEnum:        false
+    AfterFunction:    false
+    AfterNamespace:   false
     AfterObjCDeclaration: true
-    AfterStruct:      true
-    AfterUnion:       true
+    AfterStruct:      false
+    AfterUnion:       false
     BeforeCatch:      true
     BeforeElse:       true
     BeforeLambdaBody: true
-    IndentBraces:     false
+    IndentBraces:     true
 
 AllowAllParametersOfDeclarationOnNextLine: false
 
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
+AlwaysBreakTemplateDeclarations: true
 
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
@@ -53,8 +54,3 @@ IncludeCategories:
       Priority:        2
 
 ReflowComments:    false
-
-
-IndentAccessModifiers: true
-
-ContinuationIndentWidth: 4

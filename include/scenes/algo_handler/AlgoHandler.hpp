@@ -10,47 +10,44 @@
 #include <tuple>
 #include <vector>
 
-class AlgoManager : public IScene
-{
-    public:
-        class BaseAlgoHandler
-        {
-            public:
-                explicit BaseAlgoHandler(QWidget& window);
+class AlgoManager : public IScene {
+  public:
+    class BaseAlgoHandler {
+      public:
+        explicit BaseAlgoHandler(QWidget& window);
 
-            private:
-                QWidget window;
-        };
+      private:
+        QWidget window;
+    };
 
-        template <class Algo> class DerivedAlgoHandler : BaseAlgoHandler
-        {
-            public:
-                template <typename ReturnType, typename... ArgTypes>
-                explicit DerivedAlgoHandler(
-                    QWidget& window, const ParserCommand& parser_command,
-                    std::function<ReturnType(ArgTypes...)>&& function,
-                    ArgTypes&&... arguments);
-
-            private:
-                Algo algorithm;
-                QPushButton pause;
-                QPushButton speed_up;
-                QPushButton speed_down;
-                QPushButton next;
-                QPushButton prev;
-                std::vector<std::unique_ptr<IAlgoObject>> objects;
-        };
-
-        AlgoManager() = delete;
-
+    template <class Algo>
+    class DerivedAlgoHandler : BaseAlgoHandler {
+      public:
         template <typename ReturnType, typename... ArgTypes>
-        explicit AlgoManager(QWidget& window,
-                             const ParserCommand& parser_command,
-                             std::function<ReturnType(ArgTypes...)>&& function,
-                             ArgTypes&&... arguments);
+        explicit DerivedAlgoHandler(
+            QWidget& window, const ParserCommand& parser_command,
+            std::function<ReturnType(ArgTypes...)>&& function,
+            ArgTypes&&... arguments);
 
-        void draw() const override;
+      private:
+        Algo algorithm;
+        QPushButton pause;
+        QPushButton speed_up;
+        QPushButton speed_down;
+        QPushButton next;
+        QPushButton prev;
+        std::vector<std::unique_ptr<IAlgoObject>> objects;
+    };
 
-    private:
-        std::unique_ptr<BaseAlgoHandler> algo_handler;
+    AlgoManager() = delete;
+
+    template <typename ReturnType, typename... ArgTypes>
+    explicit AlgoManager(QWidget& window, const ParserCommand& parser_command,
+                         std::function<ReturnType(ArgTypes...)>&& function,
+                         ArgTypes&&... arguments);
+
+    void draw() const override;
+
+  private:
+    std::unique_ptr<BaseAlgoHandler> algo_handler;
 };
