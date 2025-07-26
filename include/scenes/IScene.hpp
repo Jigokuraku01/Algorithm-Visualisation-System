@@ -1,3 +1,11 @@
 #pragma once
 
-class IScene {};
+#include "Parser.hpp"
+#include <QApplication>
+#include <memory>
+
+class IScene
+{
+  public:
+    virtual void draw() const = 0;
+};
