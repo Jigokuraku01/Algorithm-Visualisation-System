@@ -1,19 +1,36 @@
 #include "PossibleAlgos.hpp"
+#include "AlgoHandler.hpp"
+#include "DataBundle.hpp"
+
 #include <QApplication>
 #include <QDebug>
 #include <QPushButton>
-#include <any>
+
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-    QApplication app(argc, argv);
+    try{
+        QApplication app(argc, argv);
 
-    QWidget window;
-    QPushButton button("Button!", &window);
+        QWidget window;
 
-    QObject::connect(&button, &QPushButton::clicked,
-                     [&]() { qDebug() << "Click!"; });
+        window.show();
 
-    window.show();
-    return QApplication::exec();
+        const std::size_t height = 800UL;
+        const std::size_t width = 800UL;
+
+        ParserCommand parser_command{height, width, PossibleAlgorithms::BubbleSort, "", false, false};
+        
+        DataBundle data_bundle{parser_command};
+
+        std::function<void()> fnc = []{};
+
+        AlgoManager manager(window, data_bundle, std::move(fnc));
+    
+        return QApplication::exec();
+
+    } catch (...) {
+        std::cout << "Unknown error occurred" << std::endl;
+        return -1;
+    }
 }

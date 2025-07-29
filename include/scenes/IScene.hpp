@@ -4,8 +4,9 @@
 #include <QApplication>
 #include <memory>
 
-class IScene
-{
+class IScene {
   public:
     virtual void draw() const = 0;
+
+    virtual ~IScene() = default;
 };

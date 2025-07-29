@@ -13,7 +13,7 @@ class ParserCommand {
     [[nodiscard]] bool is_file_path_exists() const;
     [[nodiscard]] bool is_auto() const;
 
-  private:
+  // private:
     std::size_t window_h_;
     std::size_t window_w_;
     PossibleAlgorithms algo_;

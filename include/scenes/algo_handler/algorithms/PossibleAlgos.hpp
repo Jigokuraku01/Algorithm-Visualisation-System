@@ -2,7 +2,6 @@
 
 #include <cstdint>
 
-enum class PossibleAlgorithms : uint8_t
-{
+enum class PossibleAlgorithms : uint8_t {
     BubbleSort
 };
