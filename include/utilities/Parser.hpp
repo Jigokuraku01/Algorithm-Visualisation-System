@@ -13,7 +13,11 @@ class ParserCommand {
     [[nodiscard]] bool is_file_path_exists() const;
     [[nodiscard]] bool is_auto() const;
 
-  // private:
+    ParserCommand(std::size_t window_h, std::size_t window_w,
+                  PossibleAlgorithms algo, std::string&& file_path,
+                  bool is_file_path_exists, bool is_auto);
+
+  private:
     std::size_t window_h_;
     std::size_t window_w_;
     PossibleAlgorithms algo_;
@@ -22,4 +26,8 @@ class ParserCommand {
     bool is_auto_;
 };
 
-class Parser {};
+class Parser {
+  public:
+    Parser() = delete;
+    static ParserCommand parse(int argc, char* argv[]);
+};

@@ -6,15 +6,13 @@
 #include "IScene.hpp"
 #include "IVisualizedAlgorithm.hpp"
 #include "PossibleAlgos.hpp"
-
 #include <QPushButton>
-
 #include <memory>
 #include <tuple>
 #include <vector>
 
 class AlgoManager : public QObject, public IScene {
-  Q_OBJECT
+    Q_OBJECT
   private:
     class BaseAlgoHandler {
       public:
@@ -31,15 +29,15 @@ class AlgoManager : public QObject, public IScene {
       public:
         template <typename ReturnType, typename... ArgTypes>
         explicit DerivedAlgoHandler(
-                QWidget& window, const DataBundle& data,
-                std::function<ReturnType(ArgTypes...)>&& function,
-                ArgTypes&&... arguments) 
-                : BaseAlgoHandler(window), algorithm(),
-                pause(new QPushButton(&window)),
-                speed_up(new QPushButton(&window)),
-                speed_down(new QPushButton(&window)),
-                next(new QPushButton(&window)),
-                prev(new QPushButton(&window)) {
+            QWidget& window, const DataBundle& data,
+            std::function<ReturnType(ArgTypes...)>&& function,
+            ArgTypes&&... arguments)
+            : BaseAlgoHandler(window), algorithm(),
+              pause(new QPushButton(&window)),
+              speed_up(new QPushButton(&window)),
+              speed_down(new QPushButton(&window)),
+              next(new QPushButton(&window)), prev(new QPushButton(&window)) {
+
             auto xxx = data.get_algo();
             // here are some crutches for linter
             if (xxx != PossibleAlgorithms::BubbleSort) {
@@ -50,6 +48,7 @@ class AlgoManager : public QObject, public IScene {
         }
 
         ~DerivedAlgoHandler() override = default;
+
       private:
         Algo algorithm;
         std::unique_ptr<QPushButton> pause;
@@ -68,14 +67,14 @@ class AlgoManager : public QObject, public IScene {
                          std::function<ReturnType(ArgTypes...)>&& function,
                          ArgTypes&&... arguments) {
         switch (data.get_algo()) {
-            case PossibleAlgorithms::BubbleSort:
-                algo_handler = std::unique_ptr<BaseAlgoHandler>(
-                    new DerivedAlgoHandler<BubbleSort>(
-                        window, data, std::move(function),
-                        std::forward<ArgTypes>(arguments)...));
-                break;
-            default:
-                throw std::invalid_argument("This algorithm does not exist.");
+        case PossibleAlgorithms::BubbleSort:
+            algo_handler = std::unique_ptr<BaseAlgoHandler>(
+                new DerivedAlgoHandler<BubbleSort>(
+                    window, data, std::move(function),
+                    std::forward<ArgTypes>(arguments)...));
+            break;
+        default:
+            throw std::invalid_argument("This algorithm does not exist.");
         }
     }
 

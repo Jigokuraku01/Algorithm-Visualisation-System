@@ -28,7 +28,7 @@ BraceWrapping:
     BeforeCatch:      true
     BeforeElse:       true
     BeforeLambdaBody: true
-    IndentBraces:     true
+    IndentBraces:     false
 
 AllowAllParametersOfDeclarationOnNextLine: false
 

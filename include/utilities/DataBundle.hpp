@@ -11,7 +11,7 @@ class DataBundle {
     [[nodiscard]] std::size_t get_window_w() const;
     [[nodiscard]] PossibleAlgorithms get_algo() const {
         if (parser_command_.algo_ == ParserCommand{}.algo_) {
-          throw std::invalid_argument("Among us.");
+            throw std::invalid_argument("Among us.");
         }
         return PossibleAlgorithms::BubbleSort;
     }
@@ -19,6 +19,6 @@ class DataBundle {
     [[nodiscard]] bool is_file_path_exists() const;
     [[nodiscard]] bool is_auto() const;
 
-  // private:
+    // private:
     ParserCommand parser_command_;
 };
