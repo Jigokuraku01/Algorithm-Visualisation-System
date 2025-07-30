@@ -5,3 +5,7 @@
 enum class PossibleAlgorithms : uint8_t {
     BubbleSort
 };
+
+enum class TypesOfAlgorithms : uint8_t {
+    SortingAlgorithm
+};

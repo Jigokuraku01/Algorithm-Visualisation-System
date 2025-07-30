@@ -7,14 +7,16 @@
 #include "IVisualizedAlgorithm.hpp"
 #include "PossibleAlgos.hpp"
 
+#include <QIcon>
 #include <QPushButton>
+#include <QStyle>
+#include <QVBoxLayout>
 
 #include <memory>
 #include <tuple>
 #include <vector>
 
-class AlgoManager : public QObject, public IScene {
-  Q_OBJECT
+class AlgoManager : public IScene {
   private:
     class BaseAlgoHandler {
       public:
@@ -35,13 +37,36 @@ class AlgoManager : public QObject, public IScene {
                 std::function<ReturnType(ArgTypes...)>&& function,
                 ArgTypes&&... arguments) 
                 : BaseAlgoHandler(window), algorithm(),
-                pause(new QPushButton(&window)),
-                speed_up(new QPushButton(&window)),
-                speed_down(new QPushButton(&window)),
-                next(new QPushButton(&window)),
-                prev(new QPushButton(&window)) {
+                prev(new QPushButton(window.style()->standardIcon(
+                    QStyle::SP_MediaSkipBackward), "", &window)),
+                speed_down(new QPushButton(window.style()->standardIcon(
+                    QStyle::SP_MediaSeekBackward),"", &window)),
+                pause(new QPushButton(window.style()->standardIcon(
+                    QStyle::SP_MediaPlay), "", &window)),
+                speed_up(new QPushButton(window.style()->standardIcon(
+                    QStyle::SP_MediaSeekForward), "", &window)),
+                next(new QPushButton(window.style()->standardIcon(
+                    QStyle::SP_MediaSkipForward), "", &window)) {
+            const int k20 = 20;
+            int window_height = window.height();
+            int window_width = window.width();
+            int button_height = window_height / k20;
+            int button_width = window_width / k20;
+            int first_button_pos_x = window_width / 2 - 
+                button_width / 2 - button_width * 2;
+            int button_pos_y = window_height / 4 * 3 - button_height / 2;
+
+            std::vector<QPushButton*> buttons{
+                prev, speed_down, pause, speed_up, next
+            };
+
+            for (std::size_t i = 0; i < buttons.size(); ++i) {
+                buttons[i]->setGeometry(first_button_pos_x +
+                                        button_width * static_cast<int>(i),
+                                        button_pos_y, button_width,
+                                        button_height);
+            }
             auto xxx = data.get_algo();
-            // here are some crutches for linter
             if (xxx != PossibleAlgorithms::BubbleSort) {
                 BaseAlgoHandler::window.addAction(nullptr);
                 std::invoke(function, std::forward<ArgTypes>(arguments)...);
@@ -52,12 +77,12 @@ class AlgoManager : public QObject, public IScene {
         ~DerivedAlgoHandler() override = default;
       private:
         Algo algorithm;
-        std::unique_ptr<QPushButton> pause;
-        std::unique_ptr<QPushButton> speed_up;
-        std::unique_ptr<QPushButton> speed_down;
-        std::unique_ptr<QPushButton> next;
-        std::unique_ptr<QPushButton> prev;
-        std::vector<std::unique_ptr<IAlgoObject>> objects;
+        QPushButton* prev;
+        QPushButton* speed_down;
+        QPushButton* pause;
+        QPushButton* speed_up;
+        QPushButton* next;
+        std::vector<IAlgoObject*> objects;
     };
 
   public:

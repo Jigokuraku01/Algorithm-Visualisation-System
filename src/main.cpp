@@ -13,8 +13,11 @@ int main(int argc, char* argv[]) {
         QApplication app(argc, argv);
 
         QWidget window;
+        
+        const int k800 = 800;
+        const int k600 = 600;
 
-        window.show();
+        window.resize(k800, k600);
 
         const std::size_t height = 800UL;
         const std::size_t width = 800UL;
@@ -26,10 +29,15 @@ int main(int argc, char* argv[]) {
         std::function<void()> fnc = []{};
 
         AlgoManager manager(window, data_bundle, std::move(fnc));
-    
+
+        window.show();
+        
         return QApplication::exec();
 
-    } catch (...) {
+    } catch (std::exception e) {
+        std::cout << e.what() << std::endl;
+        return -1;
+    } catch(...) {
         std::cout << "Unknown error occurred" << std::endl;
         return -1;
     }
