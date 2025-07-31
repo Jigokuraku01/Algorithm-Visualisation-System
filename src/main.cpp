@@ -46,30 +46,3 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 }
-
-// #include <QApplication>
-// #include <QWidget>
-// #include <QPushButton>
-// #include <QHBoxLayout>
-
-// int main(int argc, char *argv[]) {
-//     QApplication app(argc, argv);
-    
-//     QWidget window;
-//     auto *layout = new QHBoxLayout(&window);
-    
-//     auto *btn1 = new QPushButton("Button 1");
-//     auto *btn2 = new QPushButton("Button 2");
-    
-//     layout->addWidget(btn1);
-//     layout->addWidget(btn2);
-    
-//     const int k400 = 400;
-//     const int k200 = 200;
-
-//     window.setWindowTitle("Scalable Buttons");
-//     window.resize(k400, k200);
-//     window.show();
-    
-//     return QApplication::exec();
-// }

@@ -1,8 +1,7 @@
 #include "AlgoHandler.hpp"
 
 AlgoManager::BaseAlgoHandler::BaseAlgoHandler(QWidget* window) 
-    : window(window) {
-}
+    : window(window) {}
 
 AlgoManager::BaseAlgoHandler::~BaseAlgoHandler() = default;
 
