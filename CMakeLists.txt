@@ -28,6 +28,8 @@ set(Flags
     -Wconversion
 )
 
+set(CMAKE_AUTOMOC ON)
+
 file(GLOB_RECURSE FILES_IN_SRC "src/*")
 
 set(SRC_FILES "")
@@ -60,6 +62,7 @@ find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Quick)
 
 add_executable(${PROJECT_NAME}
     ${SRC_FILES}
+    ${INCLUDE_HEADERS}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

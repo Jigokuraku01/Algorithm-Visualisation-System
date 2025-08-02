@@ -38,10 +38,19 @@ _Interactive step-by-step visualizer of classic sorting algorithms in C++20 usin
 2. **Options**:
 
    - `-a` / `--algorithm`: algorithm identifier (e.g., `bubblesort`). **Required**
-   - `-d` / `--data`: comma-separated values or path to a file. Default: random data
+   - `-d` / `--data`: path to the file containing data in the required format (JSon). Default: random data
    - `--auto`: automatic mode (steps run without manual control). Default: off
    - `-w` / `--width`: window width (px). Default: 800
    - `-h` / `--height`: window height (px). Default: 600
+
+    ```bash
+   Example of data in the input file. For an array [1, 4, 2, 5]:
+
+   {
+   "values":[ "1", "4", "2", "5" ]
+   }
+
+    ```
 
 3. **In-window Controls**
    In the bottom panel, there are buttons:
