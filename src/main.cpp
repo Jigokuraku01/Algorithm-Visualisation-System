@@ -6,7 +6,9 @@
 #include <QDebug>
 #include <QPushButton>
 
+#include <chrono>
 #include <iostream>
+#include <thread>
 
 int main(int argc, char* argv[]) {
     try{
@@ -16,6 +18,12 @@ int main(int argc, char* argv[]) {
         
         QVBoxLayout main_layout(&window);
 
+        // needed to terminate the thread before closing the window
+        QObject::connect(qApp, &QGuiApplication::lastWindowClosed, [](){
+            algo::end_working_thread();
+            algo::get_working_thread().join();
+        });
+
         const int k800 = 800;
         const int k600 = 600;
 
@@ -24,7 +32,7 @@ int main(int argc, char* argv[]) {
         const std::size_t height = 800UL;
         const std::size_t width = 800UL;
 
-        ParserCommand parser_command{height, width, PossibleAlgorithms::BubbleSort, "", false, false};
+        ParserCommand parser_command{height, width, PossibleAlgorithms::BubbleSort, {4, 2, 3, 1}, "", false, false};
         
         DataBundle data_bundle{parser_command};
 
@@ -34,8 +42,8 @@ int main(int argc, char* argv[]) {
 
         main_layout.addWidget(&manager);
 
-        window.show();
-        
+        window.show();  
+
         return QApplication::exec();
 
     } catch (std::exception e) {

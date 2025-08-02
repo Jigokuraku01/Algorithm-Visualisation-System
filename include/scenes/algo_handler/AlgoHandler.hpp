@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AlgoUtilities.hpp"
 #include "BubbleSort.hpp"
 #include "DataBundle.hpp"
 #include "IAlgoObject.hpp"
@@ -23,12 +24,19 @@ class AlgoManager : public QWidget, public IScene {
   Q_OBJECT
   private:
     // type erasure for algorithm handler 
-    class BaseAlgoHandler {
+    class BaseAlgoHandler
+            : public std::enable_shared_from_this<BaseAlgoHandler> {
       public:  
         explicit BaseAlgoHandler(QWidget* window);
 
         // method for changing objects when window resize
         virtual void resize_event(QResizeEvent* event) = 0;
+
+        // method for running algorithm
+        virtual void run_algorithm() = 0;
+
+        // method for setting a function for working thread 
+        virtual void set_function_for_thread() = 0;
 
         virtual ~BaseAlgoHandler();
 
@@ -46,7 +54,8 @@ class AlgoManager : public QWidget, public IScene {
                 QWidget* window, const DataBundle& data,
                 std::function<ReturnType(ArgTypes...)>&& function,
                 ArgTypes&&... arguments) 
-                : BaseAlgoHandler(window), algorithm(),
+                : BaseAlgoHandler(window),
+                // creating buttons with icons
                 prev(new QPushButton(window->style()->standardIcon(
                     QStyle::SP_MediaSkipBackward), "", window)),
                 speed_down(new QPushButton(window->style()->standardIcon(
@@ -56,17 +65,52 @@ class AlgoManager : public QWidget, public IScene {
                 speed_up(new QPushButton(window->style()->standardIcon(
                     QStyle::SP_MediaSeekForward), "", window)),
                 next(new QPushButton(window->style()->standardIcon(
-                    QStyle::SP_MediaSkipForward), "", window)) {
+                    QStyle::SP_MediaSkipForward), "", window)),
+                // create TestAlgoObjects and fill vector
+                objects([&data](){
+                    std::vector<IAlgoObject*> result(data.get_array().size());
+                    for (std::size_t i = 0; i < result.size(); ++i) {
+                        result[i] = new TestAlgoObject(&(data.get_array()[i]));
+                    }
+                    return result;
+                }()),
+                // some crutches because there are
+                // no implemented version of AlgoObjects
+                algorithm([&data, this](){
+                    std::vector<algo::TypeWrapper<int>> result;
+                    for (std::size_t i = 0; i < data.get_array().size(); ++i) {
+                        result.emplace_back(&(data.get_array()[i]), objects[i]);
+                    }
+                    return result;
+                }()) {
+            // create lambda for forward button
+            QObject::connect(next, &QPushButton::clicked, []() {
+                algo::start_working_thread();
+            });
             resize_buttons(window->size());
             // some crutches
             auto xxx = data.get_algo();
             if (xxx != PossibleAlgorithms::BubbleSort) {
-                BaseAlgoHandler::window->addAction(nullptr);
                 std::invoke(function, std::forward<ArgTypes>(arguments)...);
-                throw std::invalid_argument("penis");
             }
         }
- 
+
+        std::function<void()> create_function_for_algo() {
+            // create shared_ptr for closing in lambda
+            auto shared_this(this->shared_from_this());
+            return [shared_this]() {
+                shared_this->run_algorithm();
+            };
+        }
+
+        void set_function_for_thread() override {
+            algo::set_function_for_thread(create_function_for_algo());
+        }
+
+        void run_algorithm() override {
+            algorithm.algorithm();
+        }
+
         // overridden parent method to change objects when window resize
         void resize_event(QResizeEvent *event) override {
             resize_buttons(event->size());
@@ -101,19 +145,18 @@ class AlgoManager : public QWidget, public IScene {
             }
         }
 
-        Algo algorithm;
         QPushButton* prev;
         QPushButton* speed_down;
         QPushButton* pause;
         QPushButton* speed_up;
         QPushButton* next;
         std::vector<IAlgoObject*> objects;
+        Algo algorithm;
     };
   
   protected:
     // overriden QWidget method for to handle the window change event
     void resizeEvent(QResizeEvent* event) override {
-        std::cout << "here" << std::endl;
         QWidget::resizeEvent(event);
         algo_handler->resize_event(event);
     }
@@ -128,21 +171,24 @@ class AlgoManager : public QWidget, public IScene {
                          ArgTypes&&... arguments) : QWidget(window) {
         switch (data.get_algo()) {
             case PossibleAlgorithms::BubbleSort:
-                algo_handler = std::unique_ptr<BaseAlgoHandler>(
-                    new DerivedAlgoHandler<BubbleSort>(
+                algo_handler = std::shared_ptr<BaseAlgoHandler>(
+                    new DerivedAlgoHandler<BubbleSort<algo::TypeWrapper<int>>>(
                         window, data, std::move(function),
                         std::forward<ArgTypes>(arguments)...));
                 break;
             default:
                 throw std::invalid_argument("This algorithm does not exist.");
         }
+        // we need set function for thread after creating object
+        // because due to the features shared_ptr
+        algo_handler->set_function_for_thread();
     }
 
-    // ???
+    // method for ???
     void draw() const override;
 
     ~AlgoManager() override;
 
   private:
-    std::unique_ptr<BaseAlgoHandler> algo_handler;
+    std::shared_ptr<BaseAlgoHandler> algo_handler;
 };
