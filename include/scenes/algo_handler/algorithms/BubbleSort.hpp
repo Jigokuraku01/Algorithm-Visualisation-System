@@ -3,7 +3,6 @@
 #include <concepts>
 #include <vector>
 
-#include "IVisualizedAlgorithm.hpp"
 #include "AlgoUtilities.hpp"
 
 // some cringe

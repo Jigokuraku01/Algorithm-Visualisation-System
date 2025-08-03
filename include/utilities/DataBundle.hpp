@@ -17,7 +17,9 @@ class DataBundle {
     }
     [[nodiscard]] std::string get_file_path() const;
     [[nodiscard]] bool is_file_path_exists() const;
-    [[nodiscard]] bool is_auto() const;
+    [[nodiscard]] bool is_auto() const {
+      return parser_command_.is_auto_;
+    }
 
   // private:
     ParserCommand parser_command_;

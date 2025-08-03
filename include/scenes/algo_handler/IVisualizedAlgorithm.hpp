@@ -1,3 +1,8 @@
 #pragma once
 
-class IVisualizedAlgorithm {};
+// here is algorithm concept
+
+template <typename Algo>
+concept Algorithm = requires(Algo algorithm) {
+    { algorithm.algorithm() };
+};

@@ -38,6 +38,13 @@ class AlgoManager : public QWidget, public IScene {
         // method for setting a function for working thread 
         virtual void set_function_for_thread() = 0;
 
+        // method for setting lambdas for basic buttons
+        virtual void set_lambdas_for_buttons() = 0;
+
+        // function for switch type of button play/pause
+        // and switch mode of algorithm (auto or not auto)
+        virtual void switch_play_pause_icon() = 0;
+
         virtual ~BaseAlgoHandler();
 
       protected:
@@ -45,7 +52,7 @@ class AlgoManager : public QWidget, public IScene {
         QWidget* window;
     };
 
-    template <class Algo>
+    template <Algorithm Algo>
     class DerivedAlgoHandler : public BaseAlgoHandler {
       public:
         // main constructor
@@ -83,16 +90,54 @@ class AlgoManager : public QWidget, public IScene {
                     }
                     return result;
                 }()) {
-            // create lambda for forward button
-            QObject::connect(next, &QPushButton::clicked, []() {
-                algo::start_working_thread();
-            });
+            algo::remove_automatic_mode();
             resize_buttons(window->size());
             // some crutches
             auto xxx = data.get_algo();
             if (xxx != PossibleAlgorithms::BubbleSort) {
                 std::invoke(function, std::forward<ArgTypes>(arguments)...);
             }
+        }
+
+        void set_lambdas_for_buttons() override {
+            // create lambda for forward button
+            QObject::connect(next, &QPushButton::clicked, []() {
+                algo::start_working_thread();
+            });
+            
+            // create lambda for speed up button
+            QObject::connect(speed_up, &QPushButton::clicked, []() {
+                algo::speed_up();
+            });
+            
+            // create lambda for speed down button
+            QObject::connect(speed_down, &QPushButton::clicked, []() {
+                algo::speed_down();
+            });
+
+            // create shared_ptr for closing in lambda
+            auto shared_this(this->shared_from_this());
+
+            // create lambda for pause/play
+            QObject::connect(pause, &QPushButton::clicked, [shared_this]() {
+                shared_this->switch_play_pause_icon();
+            });
+        }
+
+        void switch_play_pause_icon() override {
+            // bool that show current case
+            static bool is_icon_play = true;
+            // some cases
+            if (is_icon_play) {
+                pause->setIcon(window->style()->standardIcon(
+                    QStyle::SP_MediaPause));
+                algo::set_automatic_mode();
+            } else {
+                pause->setIcon(window->style()->standardIcon(
+                    QStyle::SP_MediaPlay));
+                algo::remove_automatic_mode();
+            }
+            is_icon_play = !is_icon_play;
         }
 
         std::function<void()> create_function_for_algo() {
@@ -104,7 +149,8 @@ class AlgoManager : public QWidget, public IScene {
         }
 
         void set_function_for_thread() override {
-            algo::set_function_for_thread(create_function_for_algo());
+            algo::thread_info.set_function_for_thread(
+                    create_function_for_algo());
         }
 
         void run_algorithm() override {
@@ -182,6 +228,7 @@ class AlgoManager : public QWidget, public IScene {
         // we need set function for thread after creating object
         // because due to the features shared_ptr
         algo_handler->set_function_for_thread();
+        algo_handler->set_lambdas_for_buttons();
     }
 
     // method for ???
