@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
         const std::size_t height = 800UL;
         const std::size_t width = 600UL;
 
-        ParserCommand parser_command{height, width, PossibleAlgorithms::BubbleSort, {4, 2, 3, 1}, "", false, false};
+        ParserCommand parser_command{height, width, PossibleAlgorithms::SelectionSort, {4, 3, 1, 2}, "", false, false};
         
         DataBundle data_bundle{parser_command};
 

@@ -1,12 +1,13 @@
 #pragma once
 
+#include "AlgorithmHelpers.hpp"
 #include "AlgoUtilities.hpp"
 #include "BubbleSort.hpp"
 #include "DataBundle.hpp"
 #include "IAlgoObject.hpp"
 #include "IScene.hpp"
-#include "AlgorithmHelpers.hpp"
 #include "PossibleAlgos.hpp"
+#include "SelectionSort.hpp"
 
 #include <QIcon>
 #include <QPushButton>
@@ -228,6 +229,12 @@ class AlgoManager : public QWidget, public IScene {
             case PossibleAlgorithms::BubbleSort:
                 algo_handler = std::shared_ptr<BaseAlgoHandler>(
                     new DerivedAlgoHandler<BubbleSort<algo::TypeWrapper<int>>>(
+                        window, data, std::move(function),
+                        std::forward<ArgTypes>(arguments)...));
+                break;
+            case PossibleAlgorithms::SelectionSort:
+                algo_handler = std::shared_ptr<BaseAlgoHandler>(
+                    new DerivedAlgoHandler<SelectionSort<algo::TypeWrapper<int>>>(
                         window, data, std::move(function),
                         std::forward<ArgTypes>(arguments)...));
                 break;

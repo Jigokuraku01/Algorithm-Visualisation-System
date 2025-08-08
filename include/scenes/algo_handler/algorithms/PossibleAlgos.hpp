@@ -3,7 +3,7 @@
 #include <cstdint>
 
 enum class PossibleAlgorithms : uint8_t {
-    BubbleSort
+    BubbleSort, SelectionSort
 };
 
 enum class TypesOfAlgorithms : uint8_t {

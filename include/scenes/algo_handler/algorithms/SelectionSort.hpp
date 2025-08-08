@@ -18,30 +18,29 @@
 // };
 
 template <typename T>
-class BubbleSort {
+class SelectionSort {
   public:
-    BubbleSort() = default;
+    SelectionSort() = default;
 
-    explicit BubbleSort(std::vector<T>&& data) : data(std::move(data)) {}
+    explicit SelectionSort(std::vector<T>&& data) : data(std::move(data)) {}
 
-    explicit BubbleSort(const std::vector<T>& data) : data(data) {}
+    explicit SelectionSort(const std::vector<T>& data) : data(data) {}
 
     // main algorithm method
     void algorithm() try {
         // needed to notify about the start of the algorithm
         algo::StartAlgorithm::start();
 
-        // bubble sort:
-        bool swapped = false;
-        for (std::size_t i = 0; i < data.size() - 1UL; ++i) {
-            for (std::size_t j = 0; j < data.size() - 1UL - i; ++j) {
-                if (data[j] > data[j + 1]) {
-                    algo::swap(data[j], data[j + 1]);
-                    swapped = true;
+        // selection sort:
+        for (std::size_t i = 0; i < data.size(); ++i) {
+            std::size_t min_index = i;
+            for (std::size_t j = i + 1; j < data.size(); ++j) {
+                if (data[min_index] > data[j]) {
+                    min_index = j;
                 }
             }
-            if (!swapped) {
-                break;
+            if (i != min_index) {
+                algo::swap(data[i], data[min_index]);
             }
         }
     // needed when the window is closed
