@@ -5,7 +5,7 @@
 #include "DataBundle.hpp"
 #include "IAlgoObject.hpp"
 #include "IScene.hpp"
-#include "IVisualizedAlgorithm.hpp"
+#include "AlgorithmHelpers.hpp"
 #include "PossibleAlgos.hpp"
 
 #include <QIcon>
@@ -102,9 +102,18 @@ class AlgoManager : public QWidget, public IScene {
         void set_lambdas_for_buttons() override {
             // create lambda for forward button
             QObject::connect(next, &QPushButton::clicked, []() {
-                algo::start_working_thread();
+                if (algo::steps_info.is_at_the_last_step()) {
+                    algo::start_working_thread();
+                } else {
+                    algo::steps_info.step_forward();
+                }
             });
             
+            //create lambda for back button
+            QObject::connect(prev, &QPushButton::clicked, []() {
+                algo::steps_info.step_back();
+            });
+
             // create lambda for speed up button
             QObject::connect(speed_up, &QPushButton::clicked, []() {
                 algo::speed_up();
@@ -224,7 +233,7 @@ class AlgoManager : public QWidget, public IScene {
                 break;
             default:
                 throw std::invalid_argument("This algorithm does not exist.");
-        }
+        }   
         // we need set function for thread after creating object
         // because due to the features shared_ptr
         algo_handler->set_function_for_thread();

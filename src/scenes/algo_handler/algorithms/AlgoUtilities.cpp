@@ -43,6 +43,9 @@ namespace algo {
     // info about working thread
     WorkingThreadInfo thread_info;
 
+    // info about algorithm steps
+    AlgoStepsInfo steps_info;
+
     // delay time for flags check
     inline const auto delay_time = std::chrono::milliseconds(10);
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AlgorithmHelpers.hpp"
 #include "IAlgoObject.hpp"
 
 #include <atomic>
@@ -67,7 +68,11 @@ namespace algo {
     void speed_up() noexcept;
     void speed_down() noexcept;
 
+    // extern of working thread info
     extern WorkingThreadInfo thread_info;
+
+    // extern of algo steps info
+    extern AlgoStepsInfo steps_info;
 
     template <typename T> 
     class TypeWrapper;
@@ -98,7 +103,11 @@ namespace algo {
 
         // compare operator (so far only one)
         bool operator>(TypeWrapper& other) noexcept(false) {
-            CompareAnimation::run_compare_anim(object, other.object);
+            steps_info.handle_new_step<SelectAnimation>(object, other.object);
+            stop_working_thread_from_within();
+            steps_info.handle_new_step<CompareAnimation>(object, other.object);
+            stop_working_thread_from_within();
+            steps_info.handle_new_step<DeselectAnimation>(object, other.object);
             stop_working_thread_from_within();
             return *value > *(other.value);
         }
@@ -111,7 +120,8 @@ namespace algo {
     // swap array elements, run swap animation and stop working thread
     template <typename T>
     void swap(TypeWrapper<T>& first, TypeWrapper<T>& second) noexcept(false) {
-        SwapAnimation::run_swap_anim(first.object, second.object);
+        steps_info.handle_new_step<SwapAnimation>(
+            first.object, second.object);
         // like a basic swap
         std::swap(first.value, second.value);
         std::swap(first.object, second.object);
