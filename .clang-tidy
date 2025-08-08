@@ -28,6 +28,13 @@ CheckOptions:
     value: lower_case
   - key: readability-identifier-naming.TemplateParameterCase
     value: CamelCase
+    
+  - key: readability-indentation.IndentWidth
+    value: 4
+  - key: readability-container-size-empty.MinLines
+    value: 4
+  - key: llvm-indent-width
+    value: 4
 
   - key: readability-braces-around-statements.ShortStatementLines
     value: 1
